@@ -39,7 +39,15 @@ enum Commands {
     },
 }
 
-//struct Args {}
+#[derive(Parser)]
+struct Args {
+    /// Print script-friendly output.
+    #[arg(long, short)]
+    script: bool,
+
+    #[clap(subcommand)]
+    cmd: Commands,
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ftags_file = match std::path::Path::new(".").read_dir().unwrap().find(|f| {
@@ -55,7 +63,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
         None => None,
     };
-    let command = Commands::parse();
+    let args = Args::parse();
+    let command = args.cmd;
+
+    let tag_delimiter = match args.script {
+        true => "\n",
+        false => ", ",
+    };
+
     match command {
         Commands::List{file} => {
             if ftags_file.is_none() {
@@ -102,14 +117,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             tags_list.dedup();
 
             // Print the list
-            for (i, tag) in tags_list.iter().enumerate() {
-                print!("{}", tag);
-
-                if i != tags_list.len() - 1 {
-                    print!(", ");
-                }
-            }
-            println!();
+            println!("{}", join_vec(tags_list, tag_delimiter));
         },
         Commands::Add{file, tags} => {
             dbg!(&file, &tags);
