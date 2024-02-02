@@ -214,3 +214,14 @@ fn join_vec<T: ToString>(vec: Vec<T>, delimiter: &str) -> String {
 
     joined
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_join_vec() {
+        let elements = vec!["a", "b", "c"];
+        assert_eq!(join_vec(elements, ", "), "a, b, c");
+    }
+}
