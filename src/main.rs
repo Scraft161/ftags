@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use clap::*;
 
 use ftags::{
@@ -91,27 +93,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
 
-            // Dedup tags
-            //let mut dedup_tags: Vec<TagCount> = Vec::new();
-            //for tag in &tags_list {
-            //    let mut tag_in_list = false;
-            //    for (i, d_tag) in dedup_tags.iter().enumerate() {
-            //        if tag == &d_tag.tag {
-            //            tag_in_list = true;
-            //            d_tag.count += 1;
-            //            continue
-            //        }
-
-            //        if i == dedup_tags.len() - 1 {
-            //            if !tag_in_list {
-            //                dedup_tags.push(TagCount {
-            //                    tag: tag.clone(),
-            //                    count: 1,
-            //                })
-            //            }
-            //        }
-            //    }
-            //}
+            tags_list.sort_by(|a, b| {
+                match a.name.cmp(&b.name) {
+                    Ordering::Equal => a.data.cmp(&b.data),
+                    other => other,
+                }
+            });
+            tags_list.dedup();
 
             // Print the list
             for (i, tag) in tags_list.iter().enumerate() {
