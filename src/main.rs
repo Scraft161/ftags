@@ -39,7 +39,7 @@ enum Commands {
 
 //struct Args {}
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ftags_file = match std::path::Path::new(".").read_dir().unwrap().find(|f| {
         //dbg!(f);
         f.as_ref().unwrap().file_name() == ".ftags"
@@ -57,8 +57,7 @@ fn main() {
     match command {
         Commands::List{file} => {
             if ftags_file.is_none() {
-                println!("No `.ftags` file found!");
-                return;
+                return Err("No `.ftags` file found!".into());
             }
 
             let ftags = FTagList::read(ftags_file);
@@ -74,14 +73,12 @@ fn main() {
                 // Print tags
                 println!("{}", file)
             } else {
-                println!("No tags for `{}`.", file.display());
-                return;
+                return Err(format!("No tags for `{}`.", file.display()).into());
             }
         },
         Commands::ListTags => {
             if ftags_file.is_none() {
-                println!("No `.ftags` file found!");
-                return;
+                return Err("No `.ftags` file found!".into());
             }
 
             let ftags = FTagList::read(ftags_file);
@@ -185,7 +182,7 @@ fn main() {
                 if !full_matches.is_empty() {
                     let full_matches_pretty = join_vec(full_matches.clone(), "\n    ");
                     if full_matches_pretty == matches_pretty {
-                        return;
+                        return Ok(());
                     }
                     println!();
                 }
@@ -194,6 +191,8 @@ fn main() {
             }
         },
     }
+
+    Ok(())
 }
 
 struct TagCount {
