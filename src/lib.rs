@@ -175,3 +175,49 @@ impl FromStr for FTagData {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_ftags() {
+        let ftags_str = "a: tag, tag2
+foo/b.jpg: file_type:jpg, img_tags:[1girl solo standing long_hair]";
+        let ftags_proper: FTagList = vec![
+            FTagFile {
+                file: String::from("a").into(),
+                tags: vec![
+                    FTag {
+                        name: String::from("tag"),
+                        data: None,
+                    },
+                    FTag {
+                        name: String::from("tag2"),
+                        data: None,
+                    },
+                ],
+            },
+            FTagFile {
+                file: String::from("foo/b.jpg").into(),
+                tags: vec![
+                    FTag {
+                        name: String::from("file_type"),
+                        data: Some(FTagData::Single(String::from("jpg"))),
+                    },
+                    FTag {
+                        name: String::from("img_tags"),
+                        data: Some(FTagData::List(vec![
+                            String::from("1girl"),
+                            String::from("solo"),
+                            String::from("standing"),
+                            String::from("long_hair"),
+                        ])),
+                    },
+                ],
+            },
+        ];
+
+        assert_eq!(FTagList::from_string(ftags_str.to_string()), ftags_proper);
+    }
+}
