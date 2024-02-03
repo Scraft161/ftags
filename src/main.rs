@@ -37,6 +37,14 @@ struct Args {
 	#[arg(long, short)]
 	script: bool,
 
+	///// Alternative file (path) to use.
+	//#[arg(long, short)]
+	//file: Option<String>,
+
+	/// Generate shell completions
+	#[arg(long, short)]
+	completions: bool,
+
 	#[clap(subcommand)]
 	cmd: Commands,
 }
