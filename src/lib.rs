@@ -1,8 +1,8 @@
+use std::fmt;
+use std::fs;
+use std::fs::DirEntry;
 use std::path::PathBuf;
 use std::str::FromStr;
-use std::fs::DirEntry;
-use std::fs;
-use std::fmt;
 
 pub trait FTLTrait {
     fn read(_: Option<DirEntry>) -> Self;
@@ -19,7 +19,9 @@ impl FTLTrait for FTagList {
     ///
     /// `panic!()`s when file is `None`
     fn read(file: Option<DirEntry>) -> Self {
-        if file.is_none() { panic!() }
+        if file.is_none() {
+            panic!()
+        }
 
         let contents = fs::read_to_string(file.unwrap().file_name()).unwrap();
         Self::from_string(contents)
@@ -56,7 +58,9 @@ impl FromStr for FTagFile {
     fn from_str(str: &str) -> Result<Self, Self::Err> {
         if let Some((file, tags_str)) = str.split_once(':') {
             let mut tags = Vec::new();
-            tags_str.split(',').for_each(|s| tags.push(FTag::from_str(s.trim()).unwrap()));
+            tags_str
+                .split(',')
+                .for_each(|s| tags.push(FTag::from_str(s.trim()).unwrap()));
             Ok(Self {
                 file: PathBuf::from_str(file).unwrap(),
                 tags,
@@ -89,7 +93,7 @@ impl fmt::Display for FTagFile {
 #[derive(Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
 pub struct FTag {
     pub name: String,
-    pub data: Option<FTagData>
+    pub data: Option<FTagData>,
 }
 
 impl FromStr for FTag {
@@ -133,7 +137,7 @@ impl fmt::Display for FTag {
                     }
 
                     write!(f, "{}:[{}]", self.name, data_str)
-                },
+                }
             }
         } else {
             write!(f, "{}", self.name)

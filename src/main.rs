@@ -2,11 +2,7 @@ use std::cmp::Ordering;
 
 use clap::*;
 
-use ftags::{
-    FTLTrait,
-    FTagList,
-    FTag,
-};
+use ftags::{FTLTrait, FTag, FTagList};
 
 #[derive(Parser, Debug)]
 #[command(name = "ftags")]
@@ -14,9 +10,7 @@ use ftags::{
 enum Commands {
     /// List all tags for a given file          (shorthands: `l`, `ls`)
     #[clap(aliases = &["l", "ls"])]
-    List {
-        file: std::path::PathBuf,
-    },
+    List { file: std::path::PathBuf },
     /// List all tags                           (shorthands: `t`, `lt`)
     #[clap(aliases = &["t", "lt"])]
     ListTags,
@@ -34,9 +28,7 @@ enum Commands {
     },
     /// Search files for a given tag            (shorthands: `s`, `f`)
     #[clap(aliases = &["s", "f"])]
-    Search {
-        tags: Vec<FTag>,
-    },
+    Search { tags: Vec<FTag> },
 }
 
 #[derive(Parser)]
@@ -62,7 +54,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             } else {
                 None
             }
-        },
+        }
         None => None,
     };
 
@@ -72,7 +64,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     match command {
-        Commands::List{file} => {
+        Commands::List { file } => {
             if ftags_file.is_none() {
                 return Err("No `.ftags` file found!".into());
             }
@@ -85,14 +77,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     ftags_for_file = Some(tag);
                     break;
                 }
-            };
+            }
             if let Some(file) = ftags_for_file {
                 // Print tags
                 println!("{}", file)
             } else {
                 return Err(format!("No tags for `{}`.", file.display()).into());
             }
-        },
+        }
         Commands::ListTags => {
             if ftags_file.is_none() {
                 return Err("No `.ftags` file found!".into());
@@ -108,26 +100,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
 
-            tags_list.sort_by(|a, b| {
-                match a.name.cmp(&b.name) {
-                    Ordering::Equal => a.data.cmp(&b.data),
-                    other => other,
-                }
+            tags_list.sort_by(|a, b| match a.name.cmp(&b.name) {
+                Ordering::Equal => a.data.cmp(&b.data),
+                other => other,
             });
             tags_list.dedup();
 
             // Print the list
             println!("{}", join_vec(tags_list, tag_delimiter));
-        },
-        Commands::Add{file, tags} => {
+        }
+        Commands::Add { file, tags } => {
             dbg!(&file, &tags);
             let ftags = FTagList::read(ftags_file);
             dbg!(&ftags);
-        },
-        Commands::Remove {file, tags} => {
+        }
+        Commands::Remove { file, tags } => {
             todo!();
         }
-        Commands::Search {tags} => {
+        Commands::Search { tags } => {
             let ftags = FTagList::read(ftags_file);
             let mut partial_matches = Vec::new();
             let mut full_matches = Vec::new();
@@ -185,16 +175,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 println!("Partial Matches:\n    {matches_pretty}");
             }
-        },
+        }
     }
 
     Ok(())
 }
 
-struct TagCount {
-    tag: FTag,
-    count: usize,
-}
 //struct TagCount {
 //    tag: FTag,
 //    count: usize,
