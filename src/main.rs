@@ -50,6 +50,8 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args = Args::parse();
+    let command = args.cmd;
     let ftags_file = match std::path::Path::new(".").read_dir().unwrap().find(|f| {
         //dbg!(f);
         f.as_ref().unwrap().file_name() == ".ftags"
@@ -63,8 +65,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
         None => None,
     };
-    let args = Args::parse();
-    let command = args.cmd;
 
     let tag_delimiter = match args.script {
         true => "\n",
@@ -195,6 +195,10 @@ struct TagCount {
     tag: FTag,
     count: usize,
 }
+//struct TagCount {
+//    tag: FTag,
+//    count: usize,
+//}
 
 fn join_vec<T: ToString>(vec: Vec<T>, delimiter: &str) -> String {
     let mut joined = String::new();

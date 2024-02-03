@@ -8,6 +8,8 @@ pub trait FTLTrait {
     fn read(_: Option<DirEntry>) -> Self;
 
     fn write(_: Option<DirEntry>);
+
+    fn from_string(_: String) -> Self;
 }
 
 pub type FTagList = Vec<FTagFile>;
@@ -19,20 +21,26 @@ impl FTLTrait for FTagList {
     fn read(file: Option<DirEntry>) -> Self {
         if file.is_none() { panic!() }
 
-        let mut ftags = Vec::new();
         let contents = fs::read_to_string(file.unwrap().file_name()).unwrap();
+        Self::from_string(contents)
+    }
 
-        for tagged_file in contents.split('\n') {
-            if tagged_file == "" { continue }
+    fn write(file: Option<DirEntry>) {
+        todo!()
+    }
+
+    fn from_string(string: String) -> Self {
+        let mut ftags = Vec::new();
+
+        for tagged_file in string.split('\n') {
+            if tagged_file.is_empty() {
+                continue;
+            }
 
             ftags.push(FTagFile::from_str(tagged_file).unwrap());
         }
 
         ftags
-    }
-
-    fn write(file: Option<DirEntry>) {
-        todo!()
     }
 }
 
@@ -118,7 +126,7 @@ impl fmt::Display for FTag {
 
                     for (i, list_item) in tag_list.iter().enumerate() {
                         if i != tag_list.len() && i != 0 {
-                            data_str.push_str(" ");
+                            data_str.push(' ');
                         }
 
                         data_str.push_str(list_item);
