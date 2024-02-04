@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 pub trait FTLTrait {
-	fn read(_: Option<DirEntry>) -> Self;
+	fn read(_: &Option<DirEntry>) -> Self;
 
 	fn write(&self, _: Option<DirEntry>);
 
@@ -20,12 +20,12 @@ impl FTLTrait for FTagList {
 	/// Read ftags from a file
 	///
 	/// `panic!()`s when file is `None`
-	fn read(file: Option<DirEntry>) -> Self {
+	fn read(file: &Option<DirEntry>) -> Self {
 		if file.is_none() {
 			panic!()
 		}
 
-		let contents = fs::read_to_string(file.unwrap().file_name()).unwrap();
+		let contents = fs::read_to_string(file.as_ref().unwrap().file_name()).unwrap() + "\n";
 		Self::from_string(contents)
 	}
 

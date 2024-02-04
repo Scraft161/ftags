@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 use clap::*;
 
-use ftags::{FTLTrait, FTag, FTagList};
+use ftags::{FTLTrait, FTag, FTagList, FTagFile};
 
 #[derive(Parser, Debug)]
 #[command(name = "ftags")]
@@ -77,7 +77,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				return Err("No `.ftags` file found!".into());
 			}
 
-			let ftags = FTagList::read(ftags_file);
+			let ftags = FTagList::read(&ftags_file);
 			let mut ftags_for_file = None;
 
 			for tag in ftags {
@@ -98,7 +98,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				return Err("No `.ftags` file found!".into());
 			}
 
-			let ftags = FTagList::read(ftags_file);
+			let ftags = FTagList::read(&ftags_file);
 
 			let mut tags_list = Vec::new();
 
@@ -117,16 +117,37 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			// Print the list
 			println!("{}", join_vec(tags_list, tag_delimiter));
 		}
-		Commands::Add { file, tags } => {
+		Commands::Add { file, mut tags } => {
 			dbg!(&file, &tags);
-			let ftags = FTagList::read(ftags_file);
+			let mut ftags = FTagList::read(&ftags_file);
+
+			// Find file
+			let mut file_found = false;
+			for tag_file in &mut ftags {
+				if tag_file.file == file {
+					file_found = true;
+					tag_file.tags.append(&mut tags);
+					dbg!(&tag_file, &file);
+				}
+			}
+
+			// Add file if it wasn't found
+			if !file_found {
+				ftags.push(FTagFile {
+					file,
+					tags,
+				})
+			}
+
 			dbg!(&ftags);
+
+			ftags.write(ftags_file);
 		}
 		Commands::Remove { file, tags } => {
 			todo!();
 		}
 		Commands::Search { tags } => {
-			let ftags = FTagList::read(ftags_file);
+			let ftags = FTagList::read(&ftags_file);
 			let mut partial_matches = Vec::new();
 			let mut full_matches = Vec::new();
 

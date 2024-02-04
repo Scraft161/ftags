@@ -46,7 +46,7 @@ FILENAME: tag1, tag2:TagData, tag3
 - [x] add initial set of tests
 
 ## 0.2 release roadmap
-- [ ] finish file write logic (technically already here; just want to make sure it fully works first)
+- [x] finish file write logic (technically already here; just want to make sure it fully works first)
 - [ ] implement adding/removing tags from files
 - [ ] implement adding/removing files from the database
     - [ ] remove a file once all tags have been removed.
