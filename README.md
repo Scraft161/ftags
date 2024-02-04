@@ -47,7 +47,7 @@ FILENAME: tag1, tag2:TagData, tag3
 
 ## 0.2 release roadmap
 - [x] finish file write logic (technically already here; just want to make sure it fully works first)
-- [ ] implement adding/removing tags from files
+- [x] implement adding/removing tags from files
 - [ ] implement adding/removing files from the database
     - [ ] remove a file once all tags have been removed.
 - [ ] set up shell completions
@@ -55,3 +55,4 @@ FILENAME: tag1, tag2:TagData, tag3
 
 ## 0.3 release roadmap
 - [ ] implement glob matching for files
+- [ ] implement better tag matching (`a` should match `a:b`, and `a:[b c]`)
