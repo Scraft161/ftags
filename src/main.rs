@@ -1,4 +1,7 @@
 use std::cmp::Ordering;
+use std::io;
+use std::io::Write;
+use std::io::Read;
 
 use clap::*;
 
@@ -140,7 +143,45 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			ftags.write(ftags_file);
 		}
 		Commands::Remove { file, tags } => {
-			todo!();
+			let ftags = FTagList::read(&ftags_file);
+			let mut ftags_new = ftags.clone();
+
+			// Find file
+			let mut file_found = false;
+			for (i, tag_file) in ftags.iter().enumerate() {
+				if tag_file.file == file {
+					file_found = true;
+					if tags.is_empty() {
+						print!("Remove file: `{}`? [y/(N)]> ", file.display());
+						io::stdout().flush().unwrap();
+
+						let mut choice = [0_u8];
+						io::stdin().read_exact(&mut choice).unwrap();
+
+						if &choice == b"y" || &choice == b"Y" {
+							ftags_new.remove(i);
+						} else {
+							println!("No changes.");
+							return Ok(());
+						}
+					} else {
+						let mut tag_found = false;
+						for (j, tag) in tag_file.tags.iter().enumerate() {
+							if tags.contains(tag) {
+								tag_found = true;
+								ftags_new[i].tags.remove(j);
+							}
+						}
+
+						if !tag_found {
+							println!("Tags not found: `{}`", join_vec(tags, ", "));
+						}
+					}
+					break;
+				}
+			}
+
+			ftags_new.write(ftags_file);
 		}
 		Commands::Search { tags } => {
 			let ftags = FTagList::read(&ftags_file);
