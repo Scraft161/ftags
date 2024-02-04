@@ -25,7 +25,7 @@ impl FTLTrait for FTagList {
 			panic!()
 		}
 
-		let contents = fs::read_to_string(file.as_ref().unwrap().file_name()).unwrap() + "\n";
+		let contents = fs::read_to_string(file.as_ref().unwrap().file_name()).unwrap();
 		Self::from_string(contents)
 	}
 
@@ -34,7 +34,7 @@ impl FTLTrait for FTagList {
 			panic!()
 		}
 
-		fs::write(file.unwrap().file_name(), self.to_string()).unwrap();
+		fs::write(file.unwrap().file_name(), self.to_string() + "\n").unwrap();
 	}
 
 	fn from_string(string: String) -> Self {
