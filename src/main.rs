@@ -118,7 +118,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			println!("{}", join_vec(tags_list, tag_delimiter));
 		}
 		Commands::Add { file, mut tags } => {
-			dbg!(&file, &tags);
 			let mut ftags = FTagList::read(&ftags_file);
 
 			// Find file
@@ -127,7 +126,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				if tag_file.file == file {
 					file_found = true;
 					tag_file.tags.append(&mut tags);
-					dbg!(&tag_file, &file);
 				}
 			}
 
@@ -138,8 +136,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 					tags,
 				})
 			}
-
-			dbg!(&ftags);
 
 			ftags.write(ftags_file);
 		}
