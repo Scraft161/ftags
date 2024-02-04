@@ -7,9 +7,11 @@ use std::str::FromStr;
 pub trait FTLTrait {
 	fn read(_: Option<DirEntry>) -> Self;
 
-	fn write(_: Option<DirEntry>);
+	fn write(&self, _: Option<DirEntry>);
 
 	fn from_string(_: String) -> Self;
+
+	fn to_string(&self) -> String;
 }
 
 pub type FTagList = Vec<FTagFile>;
@@ -27,8 +29,12 @@ impl FTLTrait for FTagList {
 		Self::from_string(contents)
 	}
 
-	fn write(file: Option<DirEntry>) {
-		todo!()
+	fn write(&self, file: Option<DirEntry>) {
+		if file.is_none() {
+			panic!()
+		}
+
+		fs::write(file.unwrap().file_name(), self.to_string()).unwrap();
 	}
 
 	fn from_string(string: String) -> Self {
@@ -43,6 +49,20 @@ impl FTLTrait for FTagList {
 		}
 
 		ftags
+	}
+
+	fn to_string(&self) -> String {
+		let mut str = String::new();
+
+		for (i, file) in self.iter().enumerate() {
+			str.push_str(&format!("{}", file));
+
+			if i != self.len() - 1 {
+				str.push('\n');
+			}
+		}
+
+		str
 	}
 }
 
