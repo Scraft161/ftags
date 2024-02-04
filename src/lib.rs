@@ -240,4 +240,40 @@ foo/b.jpg: file_type:jpg, img_tags:[1girl solo standing long_hair]";
 
 		assert_eq!(FTagList::from_string(ftags_str.to_string()), ftags_proper);
 	}
+
+	#[test]
+	fn test_stringify_ftags() {
+		let ftags: FTagList = vec![
+			FTagFile {
+				file: String::from(".cargo/bin").into(),
+				tags: vec![
+					FTag {
+						name: String::from("directory"),
+						data: None,
+					},
+					FTag {
+						name: String::from("child_content_type"),
+						data: Some(FTagData::Single(String::from("binary"))),
+					},
+					FTag {
+						name: String::from("misc_info"),
+						data: Some(FTagData::List(vec![
+								String::from("rust"),
+								String::from("cargo"),
+						]))
+					}
+				]
+			},
+		];
+		let ftags_as_string = String::from(".cargo/bin: directory, child_content_type:binary, misc_info:[rust cargo]");
+
+		assert_eq!(ftags.to_string(), ftags_as_string);
+	}
+
+	#[test]
+	fn test_full_parse_and_stringify() {
+		let str = String::from(".cargo/bin: directory, child_content_type:binary, misc_info:[rust cargo]");
+
+		assert_eq!(FTagList::from_string(str.clone()).to_string(), str);
+	}
 }
