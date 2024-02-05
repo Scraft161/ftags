@@ -50,7 +50,6 @@ FILENAME: tag1, tag2:TagData, tag3
 - [x] implement adding/removing tags from files
 - [x] implement adding/removing files from the database
     - [x] remove a file once all tags have been removed.
-- [ ] set up shell completions
 - [ ] allow alternative file paths
 - [ ] prune (currently) unneeded deps.
 
@@ -58,3 +57,4 @@ FILENAME: tag1, tag2:TagData, tag3
 - [ ] implement glob matching for files
 - [ ] implement better tag matching (`a` should match `a:b`, and `a:[b c]`)
 - [ ] colored output
+- [ ] set up shell completions
