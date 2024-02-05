@@ -49,7 +49,7 @@ FILENAME: tag1, tag2:TagData, tag3
 - [x] finish file write logic (technically already here; just want to make sure it fully works first)
 - [x] implement adding/removing tags from files
 - [x] implement adding/removing files from the database
-    - [ ] remove a file once all tags have been removed.
+    - [x] remove a file once all tags have been removed.
 - [ ] set up shell completions
 - [ ] allow alternative file paths
 

@@ -179,6 +179,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 					}
 					break;
 				}
+
+				// Remove file from db if there are no associated tags.
+				if tag_file.tags.is_empty() {
+					ftags_new.remove(i);
+				}
 			}
 
 			if !file_found {
