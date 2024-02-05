@@ -50,8 +50,8 @@ FILENAME: tag1, tag2:TagData, tag3
 - [x] implement adding/removing tags from files
 - [x] implement adding/removing files from the database
     - [x] remove a file once all tags have been removed.
-- [ ] allow alternative file paths
-- [ ] prune (currently) unneeded deps.
+- [x] allow alternative file paths
+- [x] prune (currently) unneeded deps.
 
 ## 0.3 release roadmap
 - [ ] implement glob matching for files

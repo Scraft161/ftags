@@ -1,8 +1,9 @@
-use std::fmt;
-use std::fs;
-use std::path::Path;
-use std::path::PathBuf;
-use std::str::FromStr;
+use std::{
+	fmt,
+	fs,
+	path::{Path, PathBuf},
+	str::FromStr,
+};
 
 pub trait FTLTrait {
 	fn read(_: &Path) -> Self;

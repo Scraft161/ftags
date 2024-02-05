@@ -1,9 +1,9 @@
-use std::cmp::Ordering;
-use std::io;
-use std::io::Read;
-use std::io::Write;
+use std::{
+	cmp::Ordering,
+	io::{ self, Read, Write },
+};
 
-use clap::*;
+use clap::Parser;
 
 //use colored::Colorize;
 
