@@ -152,7 +152,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				if tag_file.file == file {
 					file_found = true;
 					if tags.is_empty() {
-						print!("Remove file: `{}`? [y/(N)]> ", file.display());
+						print!("Remove file from db: `{}`? [y/(N)]> ", file.display());
 						io::stdout().flush().unwrap();
 
 						let mut choice = [0_u8];
