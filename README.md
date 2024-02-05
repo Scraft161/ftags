@@ -52,7 +52,9 @@ FILENAME: tag1, tag2:TagData, tag3
     - [x] remove a file once all tags have been removed.
 - [ ] set up shell completions
 - [ ] allow alternative file paths
+- [ ] prune (currently) unneeded deps.
 
 ## 0.3 release roadmap
 - [ ] implement glob matching for files
 - [ ] implement better tag matching (`a` should match `a:b`, and `a:[b c]`)
+- [ ] colored output
