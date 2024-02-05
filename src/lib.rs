@@ -1,13 +1,12 @@
 use std::fmt;
 use std::fs;
-use std::fs::DirEntry;
 use std::path::PathBuf;
 use std::str::FromStr;
 
 pub trait FTLTrait {
-	fn read(_: &Option<DirEntry>) -> Self;
+	fn read(_: &PathBuf) -> Self;
 
-	fn write(&self, _: Option<DirEntry>);
+	fn write(&self, _: &PathBuf);
 
 	fn from_string(_: String) -> Self;
 
@@ -20,21 +19,13 @@ impl FTLTrait for FTagList {
 	/// Read ftags from a file
 	///
 	/// `panic!()`s when file is `None`
-	fn read(file: &Option<DirEntry>) -> Self {
-		if file.is_none() {
-			panic!()
-		}
-
-		let contents = fs::read_to_string(file.as_ref().unwrap().file_name()).unwrap();
+	fn read(file: &PathBuf) -> Self {
+		let contents = fs::read_to_string(file).unwrap();
 		Self::from_string(contents)
 	}
 
-	fn write(&self, file: Option<DirEntry>) {
-		if file.is_none() {
-			panic!()
-		}
-
-		fs::write(file.unwrap().file_name(), self.to_string() + "\n").unwrap();
+	fn write(&self, file: &PathBuf) {
+		fs::write(file, self.to_string() + "\n").unwrap();
 	}
 
 	fn from_string(string: String) -> Self {

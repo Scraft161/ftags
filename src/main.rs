@@ -40,9 +40,9 @@ struct Args {
 	#[arg(long, short)]
 	script: bool,
 
-	///// Alternative file (path) to use.
-	//#[arg(long, short)]
-	//file: Option<String>,
+	/// Alternative file (path) to use.
+	#[arg(long, short)]
+	file: Option<std::path::PathBuf>,
 
 	/// Generate shell completions
 	#[arg(long, short)]
@@ -55,18 +55,12 @@ struct Args {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let args = Args::parse();
 	let command = args.cmd;
-	let ftags_file = match std::path::Path::new(".").read_dir().unwrap().find(|f| {
-		//dbg!(f);
-		f.as_ref().unwrap().file_name() == ".ftags"
-	}) {
-		Some(file) => {
-			if let Ok(file) = file {
-				Some(file)
-			} else {
-				None
-			}
-		}
-		None => None,
+	let ftags_file = if let Some(path) = args.file {
+		path
+	} else {
+		std::path::Path::new(".").read_dir()?.find(|f| 
+												   f.as_ref().unwrap().file_name() == ".ftags"
+		).ok_or("No .ftags file found!")??.path()
 	};
 
 	let tag_delimiter = match args.script {
@@ -76,10 +70,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 	match command {
 		Commands::List { file } => {
-			if ftags_file.is_none() {
-				return Err("No `.ftags` file found!".into());
-			}
-
 			let ftags = FTagList::read(&ftags_file);
 			let mut ftags_for_file = None;
 
@@ -97,10 +87,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 			}
 		}
 		Commands::ListTags => {
-			if ftags_file.is_none() {
-				return Err("No `.ftags` file found!".into());
-			}
-
 			let ftags = FTagList::read(&ftags_file);
 
 			let mut tags_list = Vec::new();
@@ -140,7 +126,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				})
 			}
 
-			ftags.write(ftags_file);
+			ftags.write(&ftags_file);
 		}
 		Commands::Remove { file, tags } => {
 			let ftags = FTagList::read(&ftags_file);
@@ -190,7 +176,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				return Err(format!("File not in database: `{}`", file.display()).into());
 			}
 
-			ftags_new.write(ftags_file);
+			ftags_new.write(&ftags_file);
 		}
 		Commands::Search { tags } => {
 			let ftags = FTagList::read(&ftags_file);
