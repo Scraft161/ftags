@@ -25,8 +25,8 @@ FILENAME: tag1, tag2:TagData, tag3
 
 - [x] list tags for file
 - [x] list all tags
-- [ ] add tags
-- [ ] remove tags
+- [x] add tags
+- [x] remove tags
 - [x] list files with tag
 - [ ] glob matching for files?
 
