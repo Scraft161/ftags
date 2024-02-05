@@ -13,25 +13,25 @@ use ftags::{FTLTrait, FTag, FTagFile, FTagList};
 #[command(name = "ftags")]
 #[command(bin_name = "ftags")]
 enum Commands {
-	/// List all tags for a given file          (shorthands: `l`, `ls`)
+	/// List all tags for a given file    (shorthands: `l`, `ls`)
 	#[clap(aliases = &["l", "ls"])]
 	List { file: std::path::PathBuf },
-	/// List all tags                           (shorthands: `t`, `lt`)
+	/// List all tags                     (shorthands: `t`, `lt`)
 	#[clap(aliases = &["t", "lt"])]
 	ListTags,
-	/// Add a tag to a file (Not working)       (shorthands: `a`, `n`)
+	/// Add a tag to a file               (shorthands: `a`, `n`)
 	#[clap(aliases = &["a", "n"])]
 	Add {
 		file: std::path::PathBuf,
 		tags: Vec<FTag>,
 	},
-	/// Remove a tag from a file (not working)  (shorthands: `r`, `d`)
+	/// Remove a tag from a file          (shorthands: `r`, `d`)
 	#[clap(aliases = &["r", "d"])]
 	Remove {
 		file: std::path::PathBuf,
 		tags: Vec<FTag>,
 	},
-	/// Search files for a given tag            (shorthands: `s`, `f`)
+	/// Search files for a given tag      (shorthands: `s`, `f`)
 	#[clap(aliases = &["s", "f"])]
 	Search { tags: Vec<FTag> },
 }
