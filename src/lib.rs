@@ -1,12 +1,13 @@
 use std::fmt;
 use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
 use std::str::FromStr;
 
 pub trait FTLTrait {
-	fn read(_: &PathBuf) -> Self;
+	fn read(_: &Path) -> Self;
 
-	fn write(&self, _: &PathBuf);
+	fn write(&self, _: &Path);
 
 	fn from_string(_: String) -> Self;
 
@@ -19,12 +20,12 @@ impl FTLTrait for FTagList {
 	/// Read ftags from a file
 	///
 	/// `panic!()`s when file is `None`
-	fn read(file: &PathBuf) -> Self {
+	fn read(file: &Path) -> Self {
 		let contents = fs::read_to_string(file).unwrap();
 		Self::from_string(contents)
 	}
 
-	fn write(&self, file: &PathBuf) {
+	fn write(&self, file: &Path) {
 		fs::write(file, self.to_string() + "\n").unwrap();
 	}
 
@@ -172,10 +173,10 @@ impl FromStr for FTagData {
 				// TODO: clean this mess TwT
 				if s.starts_with('[') && s.ends_with(']') {
 					data_list.push(s[1..s.len() - 1].trim().to_string())
-				} else if s.starts_with('[') {
-					data_list.push(s[1..].trim().to_string())
-				} else if s.ends_with(']') {
-					data_list.push(s[0..s.len() - 1].trim().to_string())
+				} else if let Some(stripped) = s.strip_prefix('[') {
+					data_list.push(stripped.trim().to_string())
+				} else if let Some(stripped) = s.strip_suffix(']') {
+					data_list.push(stripped.trim().to_string())
 				} else {
 					data_list.push(s.trim().to_string())
 				}
