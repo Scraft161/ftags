@@ -181,6 +181,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 				}
 			}
 
+			if !file_found {
+				return Err(format!("File not in database: `{}`", file.display()).into());
+			}
+
 			ftags_new.write(ftags_file);
 		}
 		Commands::Search { tags } => {
