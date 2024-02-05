@@ -1,13 +1,13 @@
 use std::cmp::Ordering;
 use std::io;
-use std::io::Write;
 use std::io::Read;
+use std::io::Write;
 
 use clap::*;
 
 //use colored::Colorize;
 
-use ftags::{FTLTrait, FTag, FTagList, FTagFile};
+use ftags::{FTLTrait, FTag, FTagFile, FTagList};
 
 #[derive(Parser, Debug)]
 #[command(name = "ftags")]
@@ -60,9 +60,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 	let ftags_file = if let Some(path) = args.file {
 		path
 	} else {
-		std::path::Path::new(".").read_dir()?.find(|f| 
-												   f.as_ref().unwrap().file_name() == ".ftags"
-		).ok_or("No .ftags file found!")??.path()
+		std::path::Path::new(".")
+			.read_dir()?
+			.find(|f| f.as_ref().unwrap().file_name() == ".ftags")
+			.ok_or("No .ftags file found!")??
+			.path()
 	};
 
 	let tag_delimiter = match args.script {
@@ -122,10 +124,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 			// Add file if it wasn't found
 			if !file_found {
-				ftags.push(FTagFile {
-					file,
-					tags,
-				})
+				ftags.push(FTagFile { file, tags })
 			}
 
 			ftags.write(&ftags_file);
