@@ -5,6 +5,8 @@ use std::io::Read;
 
 use clap::*;
 
+//use colored::Colorize;
+
 use ftags::{FTLTrait, FTag, FTagList, FTagFile};
 
 #[derive(Parser, Debug)]
